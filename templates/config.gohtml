@@ -4,58 +4,69 @@
     <div class="container mx-auto">
         <h1 class="text-4xl mb-6">GopherDork configuration</h1>
         <p class="text-lg font-medium">This tab allows you to configure and save different dorks that will be run by the application. 
-            You can specify different query strings, country and langauge codes, proxy servers and limit the number of results
-            or specify the starting point of the results dataset.</p>
+            You can specify different query strings, proxy servers and limit the number of results shown.</p>
     </div>
 </header>
 
-<!-- Table -->
 <div class="container mx-auto my-10">
+    <!-- Form -->
+    <div class="max-w-xl mx-auto mt-6">
+        <form action="save" method="post" class="grid grid-cols-3 gap-4">
+        <div class="col-span-3">
+            <label for="query" class="block text-sm font-medium">Query:</label>
+            <input type="text" id="query" name="query" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+        </div>
+        <div>
+            <label for="limit" class="block text-sm font-medium">Limit:</label>
+            <input type="text" id="limit" name="limit" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+        </div>
+        <div>
+            <label for="proxy" class="block text-sm font-medium">Proxy:</label>
+            <input type="text" id="proxy" name="proxy" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+        </div>
+        <div class="sm:text-right my-2">
+            <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Add
+            </button>
+        </div>
+        </form>
+    </div>
 
-
-<div class="max-w-md mx-auto mt-6">
-    <form class="grid grid-cols-2 gap-4">
-      <div class="col-span-2">
-        <label for="query" class="block text-sm font-medium text-gray-700">Query:</label>
-        <input type="text" id="query" name="query" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-      </div>
-      <div>
-        <label for="country-code" class="block text-sm font-medium text-gray-700">Country Code:</label>
-        <select id="country-code" name="country-code" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="MX">Mexico</option>
-          <!-- Add more options as needed -->
-        </select>
-      </div>
-      <div>
-        <label for="language-code" class="block text-sm font-medium text-gray-700">Language Code:</label>
-        <select id="language-code" name="language-code" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          <option value="en">English</option>
-          <option value="fr">French</option>
-          <option value="es">Spanish</option>
-          <!-- Add more options as needed -->
-        </select>
-      </div>
-      <div>
-        <label for="limit" class="block text-sm font-medium text-gray-700">Limit:</label>
-        <input type="text" id="limit" name="limit" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-      </div>
-      <div>
-        <label for="start" class="block text-sm font-medium text-gray-700">Start:</label>
-        <input type="text" id="start" name="start" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-      </div>
-      <div>
-        <label for="proxy" class="block text-sm font-medium text-gray-700">Proxy:</label>
-        <input type="text" id="proxy" name="proxy" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-      </div>
-      <div class="col-span-2 sm:text-right">
-        <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Search
-        </button>
-      </div>
-    </form>
-  </div>
+    <!-- Table -->
+    <div class="container mx-auto my-10">
+        <div class="flex flex-col">
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-gray-400 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-400">
+                    <thead class="bg-gray-600">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">#</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Config name</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Query string</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Limit</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Proxy</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Edit</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-gray-500 divide-y divide-gray-400">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">1</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">Config 1</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white"></td>
+                        <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">5</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">None</td>
+                        <td class="px-6 py-4 whitespace-nowrap font-semibold text-sm text-white">
+                        <a href="#" class="hover:text-gray-400">Edit</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            </div>
+        </div>  
+    </div>
   
 </div>
 {{end}}
