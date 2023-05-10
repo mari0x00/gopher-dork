@@ -1,4 +1,18 @@
 {{define "page"}}
+<!-- Header -->
+<header class="py-10">
+    <div class="container mx-auto">
+        <h1 class="text-4xl mb-6">GopherDork configuration</h1>
+        <p class="text-lg font-medium">This tab allows you to configure and save different dorks that will be run by the application. 
+            You can specify different query strings, country and langauge codes, proxy servers and limit the number of results
+            or specify the starting point of the results dataset.</p>
+    </div>
+</header>
+
+<!-- Table -->
+<div class="container mx-auto my-10">
+
+
 <div class="max-w-md mx-auto mt-6">
     <form class="grid grid-cols-2 gap-4">
       <div class="col-span-2">
@@ -43,4 +57,5 @@
     </form>
   </div>
   
+</div>
 {{end}}
