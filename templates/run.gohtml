@@ -1,0 +1,35 @@
+{{define "page"}}
+<!-- Header -->
+<header class="py-10">
+    <div class="container mx-auto">
+        <h1 class="text-4xl mb-6">GopherDork results</h1>
+        <p class="text-lg">This tab displays the results of all google dorks Configured.</p>
+    </div>
+</header>
+
+<!-- Table -->
+<div class="container mx-auto my-10">
+    <table class="table-auto w-full">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">#</th>
+                <th class="px-4 py-2">Config</th>
+                <th class="px-4 py-2">URL</th>
+                <th class="px-4 py-2">Desc</th>
+                <th class="px-4 py-2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .}}
+            <tr>
+                <td class="border px-4 py-2">{{.Rank}}</td>
+                <td class="border px-4 py-2">Config1</td>
+                <td class="border px-4 py-2"><a class="hover:text-gray-400" href="{{.URL}}">{{.URL}}</a></td>
+                <td class="border px-4 py-2">{{.Title}}</td>
+                <td class="border px-4 py-2">FP/fixed/to fix/etc.</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</div>
+{{end}}
