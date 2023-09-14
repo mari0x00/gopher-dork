@@ -37,6 +37,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Get("/", controllers.StaticHandler(views.Must(views.ParseFS(templates.FS, "tailwind.gohtml", "home.gohtml"))))
 	r.Get("/config", controllers.StaticHandler(views.Must(views.ParseFS(templates.FS, "tailwind.gohtml", "config.gohtml"))))
+	r.Post("/config", controllers.StaticHandler(views.Must(views.ParseFS(templates.FS, "tailwind.gohtml", "config.gohtml"))))
 	r.Get("/run", runHandler)
 
 	fmt.Println("Server started!")
