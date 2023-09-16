@@ -50,9 +50,9 @@ func (rs *ResultsService) Add(configId int, result Result) error {
 }
 
 func (rs *ResultsService) GetConfigById(configId int) (*Config, error) {
-	row := rs.DB.QueryRow(`SELECT name, query, results_limit, proxy FROM configs WHERE id = $1`, configId)
+	row := rs.DB.QueryRow(`SELECT name, query, results_limit FROM configs WHERE id = $1`, configId)
 	var config Config
-	err := row.Scan(&config.Name, &config.Query, &config.Limit, &config.Proxy)
+	err := row.Scan(&config.Name, &config.Query, &config.Limit)
 	if err != nil {
 		return nil, fmt.Errorf("getConfigById: %w", err)
 	}

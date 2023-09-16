@@ -10,7 +10,6 @@ type Config struct {
 	Name  string
 	Query string
 	Limit int
-	Proxy string
 }
 
 type ConfigsService struct {
@@ -25,7 +24,7 @@ func (cs *ConfigsService) GetAll() ([]Config, error) {
 	configs := []Config{}
 	for rows.Next() {
 		var config Config
-		err = rows.Scan(&config.Id, &config.Name, &config.Query, &config.Limit, &config.Proxy)
+		err = rows.Scan(&config.Id, &config.Name, &config.Query, &config.Limit)
 		if err != nil {
 			return nil, fmt.Errorf("getAll: %w", err)
 		}
@@ -34,11 +33,11 @@ func (cs *ConfigsService) GetAll() ([]Config, error) {
 	return configs, nil
 }
 
-func (cs *ConfigsService) Add(name string, query string, limit int, proxy string) error {
+func (cs *ConfigsService) Add(name string, query string, limit int) error {
 	sql_statement := `
-		INSERT INTO configs (name, query, results_limit, proxy) 
-		VALUES ($1, $2, $3, $4)`
-	_, err := cs.DB.Exec(sql_statement, name, query, limit, proxy)
+		INSERT INTO configs (name, query, results_limit) 
+		VALUES ($1, $2, $3)`
+	_, err := cs.DB.Exec(sql_statement, name, query, limit)
 	if err != nil {
 		return fmt.Errorf("add: %w", err)
 	}

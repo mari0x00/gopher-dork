@@ -31,8 +31,7 @@ func (c Configs) Add(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Limit parameter must be numeric", http.StatusNotFound)
 	}
-	proxy := r.FormValue("proxy")
-	err = c.ConfigsService.Add(name, query, limit, proxy)
+	err = c.ConfigsService.Add(name, query, limit)
 	if err != nil {
 		fmt.Println(err)
 	}
