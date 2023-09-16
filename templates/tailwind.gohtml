@@ -7,6 +7,23 @@
     <title>GopherDorks</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for the spinner */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3490dc;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Spinner animation keyframes */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body class="bg-gray-800 text-white font-bold">
     <!-- Navbar -->
@@ -17,12 +34,37 @@
                 <div>
                     <a href="/" class="mx-4 hover:text-gray-400">Results</a>
                     <a href="/config" class="mx-4 hover:text-gray-400">Configure</a>
-                    <a href="/run" class="mx-4 hover:text-gray-400">Run</a>
+                    <a href="/run" class="mx-4 hover:text-gray-400 runButton">Run</a>
                 </div>
             </div>
         </div>
     </nav>
 
+    <div id="popup" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+    
+      <div class="bg-white p-8 rounded-lg shadow-lg text-black flex items-center justify-center">
+        <div class="spinner"></div>
+        <p class="px-3">Dorking... This could take a while.</p>
+      </div>
+    </div>
+
     {{template "page" .}}
 </body>
+
+<script>
+    const runBtns = document.querySelectorAll('.runButton');
+    const popup = document.getElementById("popup");
+
+    runBtns.forEach(btn => {
+        btn.addEventListener('click', function handleClick(event) {
+            const xhr = new XMLHttpRequest();
+            var path = document.location.origin + btn.getAttribute("href");
+            xhr.open("GET", path);
+            xhr.send();
+            popup.classList.remove("hidden");
+        });
+    });
+
+</script>
 </html>

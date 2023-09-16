@@ -24,15 +24,25 @@
                 </tr>
                 </thead>
                 <tbody class="bg-gray-500 divide-y divide-gray-400">
+                {{range .}}
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">1</td>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">Config 1</td>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white"><a class="hover:text-gray-400" href="http://example.com">http://example.com</a></td>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
-                    <td class="px-6 py-4 whitespace-nowrap font-semibold text-sm text-white">
-                    <a href="#" class="hover:text-gray-400">Edit</a>
+                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                        {{if .Id}}{{.Id}}{{end}}
+                    </td>
+                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                        {{if .ConfigName}}{{.ConfigName}}{{end}}
+                    </td>
+                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                        {{if .Url}}<a class="hover:text-gray-400" href="{{.Url}}">{{.Url}}</a>{{end}}
+                    </td>
+                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                        {{if .Description}}{{ .Description}}{{end}}
+                    </td>
+                    <td class="px-6 py-4 whitespace-normal font-semibold text-sm text-white">
+                    <a href="/action/{{.Id}}" class="hover:text-gray-400">Action</a>
                     </td>
                 </tr>
+                {{end}}
                 </tbody>
             </table>
             </div>

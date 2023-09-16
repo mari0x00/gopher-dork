@@ -1,45 +1,11 @@
 {{define "page"}}
-<!-- Header -->
-<header class="py-10">
-    <div class="container mx-auto">
-        <h1 class="text-4xl mb-6">GopherDork results</h1>
-        <p class="text-lg font-medium">This tab displays the results of all google dorks Configured.</p>
+    <!-- Popup for messages (hidden class to hide) -->
+    <div id="popup" class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    
+    <div class="bg-white p-8 rounded-lg shadow-lg text-black flex items-center justify-center">
+        <div class="spinner"></div>
+        <p class="px-3">Dorking... This could take a while.</p>
     </div>
-</header>
-
-<!-- Table -->
-<div class="container mx-auto my-10">
-    <div class="flex flex-col">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div class="shadow overflow-hidden border-b border-gray-400 sm:rounded-lg">
-            <table class="min-w-full divide-y divide-gray-400">
-                <thead class="bg-gray-600">
-                <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">#</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Config</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">URL</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Desc</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
-                </tr>
-                </thead>
-                <tbody class="bg-gray-500 divide-y divide-gray-400">
-                    {{range .}}
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">{{.Rank}}</td>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">Config 1</td>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white"><a class="hover:text-gray-400" href="{{.URL}}">{{.URL}}</a></td>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">{{.Title}}</td>
-                    <td class="px-6 py-4 whitespace-nowrap font-normal text-sm text-white">
-                    <a href="#" class="text-blue-950 hover:text-blue-900">Edit</a>
-                    </td>
-                </tr>
-                    {{end}}
-                </tbody>
-            </table>
-            </div>
-        </div>
-        </div>
-    </div>  
-</div>
+    </div>
 {{end}}
