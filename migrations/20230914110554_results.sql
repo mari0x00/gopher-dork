@@ -3,7 +3,7 @@
 CREATE TABLE results(
     id SERIAL PRIMARY KEY,
     config_id INT REFERENCES configs (id) ON DELETE CASCADE,
-    url TEXT NOT NULL,
+    url TEXT UNIQUE NOT NULL,
     description TEXT
 );
 INSERT INTO results(
@@ -15,7 +15,7 @@ VALUES (
     'test',  
     'test'), (
     1,
-    'test',  
+    'test2',  
     'test');
 -- +goose StatementEnd
 

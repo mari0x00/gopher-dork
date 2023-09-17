@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgconn"
 	dorker "github.com/mari0x00/google-dork/cmd"
 	"github.com/mari0x00/google-dork/models"
 )
@@ -28,17 +30,18 @@ func (re Results) GetAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (re Results) GetDorks(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("RUNNING GET DORKS")
 	configId, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		fmt.Println(err)
 	}
 	config, err := re.ResultsService.GetConfigById(configId)
 	if err != nil {
-		fmt.Printf("getDorks: %v", err)
+		fmt.Printf("getDorks: %v\n", err)
 	}
 	results, err := dorker.Dork(config.Query, config.Limit)
 	if err != nil {
-		fmt.Printf("getDorks: %v", err)
+		fmt.Printf("getDorks: %v\n", err)
 	}
 	for _, result := range results {
 		entry := models.Result{
@@ -48,7 +51,11 @@ func (re Results) GetDorks(w http.ResponseWriter, r *http.Request) {
 		}
 		err := re.ResultsService.Add(configId, entry)
 		if err != nil {
-			fmt.Println("getDorks: %w", err)
+			var duplicateEntryError = &pgconn.PgError{Code: "23505"}
+			if errors.As(err, &duplicateEntryError) {
+				continue
+			}
+			fmt.Printf("getDorks: %v\n", err)
 		}
 	}
 	http.Redirect(w, r, "/", http.StatusFound)

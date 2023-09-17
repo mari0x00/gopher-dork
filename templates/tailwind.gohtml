@@ -58,10 +58,10 @@
 
     runBtns.forEach(btn => {
         btn.addEventListener('click', function handleClick(event) {
-            const xhr = new XMLHttpRequest();
+            {{/* const xhr = new XMLHttpRequest();
             var path = document.location.origin + btn.getAttribute("href");
             xhr.open("GET", path);
-            xhr.send();
+            xhr.send(); */}}
             popup.classList.remove("hidden");
         });
     });

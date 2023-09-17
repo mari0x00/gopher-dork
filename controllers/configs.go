@@ -30,6 +30,7 @@ func (c Configs) Add(w http.ResponseWriter, r *http.Request) {
 	limit, err := strconv.Atoi(r.FormValue("limit"))
 	if err != nil {
 		http.Error(w, "Limit parameter must be numeric", http.StatusNotFound)
+		return
 	}
 	err = c.ConfigsService.Add(name, query, limit)
 	if err != nil {
