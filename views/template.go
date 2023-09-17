@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"path"
 )
 
 type Template struct {
@@ -20,17 +21,16 @@ func Must(t Template, err error) Template {
 }
 
 func ParseFS(fs fs.FS, pattern ...string) (Template, error) {
-	tpl, err := template.ParseFS(fs, pattern...)
-	if err != nil {
-		return Template{}, fmt.Errorf("parsing template: %w", err)
-	}
-	return Template{
-		htmlTpl: tpl,
-	}, nil
-}
+	tpl := template.New(path.Base(pattern[0]))
+	tpl = tpl.Funcs(
+		template.FuncMap{
+			"add1": func(i int) int {
+				return i + 1
+			},
+		},
+	)
+	tpl, err := tpl.ParseFS(fs, pattern...)
 
-func Parse(filepath string) (Template, error) {
-	tpl, err := template.ParseFiles(filepath)
 	if err != nil {
 		return Template{}, fmt.Errorf("parsing template: %w", err)
 	}
@@ -47,5 +47,4 @@ func (t Template) Execute(w http.ResponseWriter, data interface{}) {
 		http.Error(w, "There was an error executing the template.", http.StatusInternalServerError)
 		return
 	}
-
 }
