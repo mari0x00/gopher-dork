@@ -58,3 +58,20 @@ func (rs *ResultsService) GetConfigById(configId int) (*Config, error) {
 	}
 	return &config, nil
 }
+
+func (rs *ResultsService) GetAllConfigIds() ([]Config, error) {
+	rows, err := rs.DB.Query(`SELECT id, query, results_limit FROM configs;`)
+	if err != nil {
+		return nil, fmt.Errorf("getAllConfigIds: %w", err)
+	}
+	var configs []Config
+	for rows.Next() {
+		var entry Config
+		err := rows.Scan(&entry.Id, &entry.Query, &entry.Limit)
+		if err != nil {
+			return nil, fmt.Errorf("getAllConfigIds: %w", err)
+		}
+		configs = append(configs, entry)
+	}
+	return configs, nil
+}

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgconn"
@@ -30,7 +29,6 @@ func (re Results) GetAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (re Results) GetDorks(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("RUNNING GET DORKS")
 	configId, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		fmt.Println(err)
@@ -62,6 +60,30 @@ func (re Results) GetDorks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (re Results) RunAll(w http.ResponseWriter, r *http.Request) {
-	time.Sleep(5 * time.Second)
+	configs, err := re.ResultsService.GetAllConfigIds()
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, config := range configs {
+		results, err := dorker.Dork(config.Query, config.Limit)
+		if err != nil {
+			fmt.Printf("getDorks: %v\n", err)
+		}
+		for _, result := range results {
+			entry := models.Result{
+				ConfigName:  config.Name,
+				Description: result.Name,
+				Url:         result.Url,
+			}
+			err := re.ResultsService.Add(config.Id, entry)
+			if err != nil {
+				var duplicateEntryError = &pgconn.PgError{Code: "23505"}
+				if errors.As(err, &duplicateEntryError) {
+					continue
+				}
+				fmt.Printf("getDorks: %v\n", err)
+			}
+		}
+	}
 	http.Redirect(w, r, "/", http.StatusFound)
 }
