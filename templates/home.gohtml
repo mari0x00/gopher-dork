@@ -25,17 +25,21 @@
                         </thead>
                         <tbody class="bg-gray-500 divide-y divide-gray-400">
                             {{range $index, $element := .}}
-                            <tr>
-                                <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                            <tr _status="{{if $element.Status}}{{$element.Status}}{{end}}" class="tr">
+                                <td class="td px-6 py-4 whitespace-normal font-normal text-sm text-white">
                                     {{$index | add1}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                                <td class="td px-6 py-4 whitespace-normal font-normal text-sm text-white">
                                     {{if $element.ConfigName}}{{$element.ConfigName}}{{end}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
-                                    {{if $element.Url}}<a class="hover:text-gray-400" href="{{$element.Url}}">{{$element.Url}}</a>{{end}}
+                                <td class="td px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                                    {{if $element.Url}}
+                                    <a class="hover:text-gray-400" href="{{$element.Url}}" target="_blank" rel="noopener noreferrer">
+                                        {{$element.Url}}
+                                    </a>
+                                    {{end}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">
+                                <td class="td px-6 py-4 whitespace-normal font-normal text-sm text-white">
                                     {{if $element.Description}}{{$element.Description}}{{end}}
                                 </td>
                                 <td class="px-6 py-4 whitespace-normal font-semibold text-sm text-white text-right">
@@ -44,9 +48,9 @@
                                             Action
                                         </button>
                                         <div class="dropdown-menu hidden rounded-md absolute z-50 mt-2 py-2 w-32 bg-gray-400 border border-gray-600 shadow-lg">
-                                            <a href="/{{$element.Id}}/in-progress" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">In progress</a>
-                                            <a href="/{{$element.Id}}/complete" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Completed</a>
-                                            <a href="/{{$element.Id}}/delete" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</a>
+                                            <div style="cursor: pointer" _id="{{$element.Id}}" _newStatus="1" class="editBtn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">In progress</div>
+                                            <div style="cursor: pointer" _id="{{$element.Id}}" _newStatus="2" class="editBtn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Completed</div>
+                                            <div style="cursor: pointer" _id="{{$element.Id}}" _newStatus="delete" class="editBtn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</div>
                                         </div>
                                     </div>
                                 </td>
@@ -61,6 +65,12 @@
 </div>
 <script>
     const dropdownButtons = document.querySelectorAll('.dropdown-button');
+    const editBtns = document.querySelectorAll('.editBtn');
+    const rows = document.querySelectorAll('.tr');
+
+    rows.forEach(row => {
+        changeColor(row, row.getAttribute("_status"));
+    });
 
     dropdownButtons.forEach(btn => {
         btn.addEventListener('click', function handleClick(event) {
@@ -70,11 +80,56 @@
 
     document.addEventListener('click', (event) => {
         dropdownButtons.forEach(btn => {
-            if (!btn.contains(event.target) && !btn.nextElementSibling.contains(event.target)) {
+            if (!btn.contains(event.target)) {
                 btn.nextElementSibling.classList.add('hidden');
             }
-
         });
     });
+
+    editBtns.forEach(btn => {
+        btn.addEventListener('click', function handleClick(event) {
+            const id = btn.getAttribute("_id");
+            const status = btn.getAttribute("_newStatus");
+            const parent = btn.closest(".tr");
+            var path = "";
+            if (parent.getAttribute("_status") === status) {
+                path = document.location.origin + "/edit/" + id + "/0";
+            } else {
+                path = document.location.origin + "/edit/" + id + "/" + status;
+            }
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", path);
+            xhr.send();
+            xhr.onload = function() {
+                // Check if the request was a success
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    var newStatus = xhr.responseText;
+                    changeColor(parent, newStatus);
+                    parent.setAttribute("_status", newStatus);
+                }
+            }
+        });
+    });
+
+    function changeColor(el, st) {
+        if (st == 0) {
+            el.classList = "tr";
+            el.querySelectorAll(".td").forEach(elm => {
+                elm.classList = "td px-6 py-4 whitespace-normal font-normal text-sm text-white"
+            });
+        } else if (st == 1) {
+            el.classList = "tr bg-amber-300";
+            el.querySelectorAll(".td").forEach(elm => {
+                elm.classList = "td px-6 py-4 whitespace-normal font-normal text-sm text-black"
+            });
+        } else if (st == 2) {
+            el.classList = "tr bg-emerald-300";
+            el.querySelectorAll(".td").forEach(elm => {
+                elm.classList = "td px-6 py-4 whitespace-normal font-normal text-sm text-black"
+            });
+        }
+    };
+
+
 </script>
 {{end}}

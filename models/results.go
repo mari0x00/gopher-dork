@@ -10,6 +10,7 @@ type Result struct {
 	ConfigName  string
 	Url         string
 	Description string
+	Status      int
 }
 
 type ResultsService struct {
@@ -18,10 +19,11 @@ type ResultsService struct {
 
 func (rs *ResultsService) GetAll() ([]Result, error) {
 	rows, err := rs.DB.Query(`
-		SELECT results.id, configs.name, results.url, results.description
+		SELECT results.id, configs.name, results.url, results.description, results.status
 		FROM results 
 		INNER JOIN configs 
-		ON results.config_id = configs.id;
+		ON results.config_id = configs.id
+		ORDER BY results.id;
 	`)
 	if err != nil {
 		return nil, fmt.Errorf("getAll: %w", err)
@@ -29,7 +31,7 @@ func (rs *ResultsService) GetAll() ([]Result, error) {
 	results := []Result{}
 	for rows.Next() {
 		var result Result
-		err = rows.Scan(&result.Id, &result.ConfigName, &result.Url, &result.Description)
+		err = rows.Scan(&result.Id, &result.ConfigName, &result.Url, &result.Description, &result.Status)
 		if err != nil {
 			return nil, fmt.Errorf("getAll: %w", err)
 		}
@@ -40,8 +42,8 @@ func (rs *ResultsService) GetAll() ([]Result, error) {
 
 func (rs *ResultsService) Add(configId int, result Result) error {
 	sqlStatement := `
-		INSERT INTO results (config_id, url, description)
-		VALUES ($1, $2, $3)`
+		INSERT INTO results (config_id, url, description, status)
+		VALUES ($1, $2, $3, 0)`
 	_, err := rs.DB.Exec(sqlStatement, configId, result.Url, result.Description)
 	if err != nil {
 		return fmt.Errorf("add: %w", err)
@@ -74,4 +76,18 @@ func (rs *ResultsService) GetAllConfigIds() ([]Config, error) {
 		configs = append(configs, entry)
 	}
 	return configs, nil
+}
+
+func (rs *ResultsService) ChangeStatus(recordId int, newStatus int) (int64, error) {
+	sqlStatement := "UPDATE results SET status = $1 WHERE id = $2"
+	res, err := rs.DB.Exec(sqlStatement, newStatus, recordId)
+	if err != nil {
+		return 0, fmt.Errorf("changeStatus: %v", err)
+	}
+	i, err := res.RowsAffected()
+	if err != nil {
+		fmt.Printf("changeStatus: %v", err)
+		return 0, fmt.Errorf("changeStatus: %v", err)
+	}
+	return i, nil
 }

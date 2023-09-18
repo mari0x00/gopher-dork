@@ -87,3 +87,33 @@ func (re Results) RunAll(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
 }
+
+func (re Results) ChangeStatus(w http.ResponseWriter, r *http.Request) {
+	recordId, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		return
+	}
+	newStatus, err := strconv.Atoi(chi.URLParam(r, "status"))
+	if err != nil {
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		return
+	}
+	if newStatus < 0 || newStatus > 2 {
+		http.Error(w, "Invalid status code provided", http.StatusNotFound)
+		return
+	}
+	res, err := re.ResultsService.ChangeStatus(recordId, newStatus)
+	if err != nil {
+		println(err)
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+	}
+	if res < 1 {
+		http.Error(w, "Invalid recordId.", http.StatusNotFound)
+		return
+	}
+	_, err = w.Write([]byte(chi.URLParam(r, "status")))
+	if err != nil {
+		println(err)
+	}
+}

@@ -38,23 +38,25 @@ func main() {
 	}
 
 	// Setup controllers
-	rs := controllers.Results{
+	re := controllers.Results{
 		ResultsService: resultsService,
 	}
-	cs := controllers.Configs{
+	co := controllers.Configs{
 		ConfigsService: configsService,
 	}
 
-	rs.Templates.GetAll = views.Must(views.ParseFS(templates.FS, "tailwind.gohtml", "home.gohtml"))
-	cs.Templates.GetAll = views.Must(views.ParseFS(templates.FS, "tailwind.gohtml", "config.gohtml"))
+	re.Templates.GetAll = views.Must(views.ParseFS(templates.FS, "tailwind.gohtml", "home.gohtml"))
+	co.Templates.GetAll = views.Must(views.ParseFS(templates.FS, "tailwind.gohtml", "config.gohtml"))
 
 	// Setup routes
-	r.Get("/", rs.GetAll)
-	r.Get("/config", cs.GetAll)
-	r.Post("/config/add", cs.Add)
-	r.Get("/config/delete/{id}", cs.Delete)
-	r.Get("/run/{id}", rs.GetDorks)
-	r.Get("/run", rs.RunAll)
+	r.Get("/", re.GetAll)
+	r.Get("/config", co.GetAll)
+	r.Post("/config/add", co.Add)
+	r.Get("/config/delete/{id}", co.Delete)
+	r.Get("/run/{id}", re.GetDorks)
+	r.Get("/run", re.RunAll)
+	r.Get("/edit/{id}/{status}", re.ChangeStatus)
+	r.Get("/edit/{id}/delete", re.RunAll)
 
 	fmt.Println("Server started!")
 	err = http.ListenAndServe(":3000", r)
