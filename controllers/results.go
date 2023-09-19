@@ -24,6 +24,8 @@ func (re Results) GetAll(w http.ResponseWriter, r *http.Request) {
 	results, err := re.ResultsService.GetAll()
 	if err != nil {
 		fmt.Println(err)
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		return
 	}
 	re.Templates.GetAll.Execute(w, results)
 }
@@ -32,14 +34,20 @@ func (re Results) GetDorks(w http.ResponseWriter, r *http.Request) {
 	configId, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		fmt.Println(err)
+		http.Error(w, "ID parameter must be numeric.", http.StatusInternalServerError)
+		return
 	}
 	config, err := re.ResultsService.GetConfigById(configId)
 	if err != nil {
 		fmt.Printf("getDorks: %v\n", err)
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		return
 	}
 	results, err := dorker.Dork(config.Query, config.Limit)
 	if err != nil {
 		fmt.Printf("getDorks: %v\n", err)
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		return
 	}
 	for _, result := range results {
 		entry := models.Result{
@@ -54,6 +62,8 @@ func (re Results) GetDorks(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 			fmt.Printf("getDorks: %v\n", err)
+			http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+			return
 		}
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
@@ -63,11 +73,15 @@ func (re Results) RunAll(w http.ResponseWriter, r *http.Request) {
 	configs, err := re.ResultsService.GetAllConfigIds()
 	if err != nil {
 		fmt.Println(err)
+		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		return
 	}
 	for _, config := range configs {
 		results, err := dorker.Dork(config.Query, config.Limit)
 		if err != nil {
 			fmt.Printf("getDorks: %v\n", err)
+			http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+			return
 		}
 		for _, result := range results {
 			entry := models.Result{
@@ -82,6 +96,8 @@ func (re Results) RunAll(w http.ResponseWriter, r *http.Request) {
 					continue
 				}
 				fmt.Printf("getDorks: %v\n", err)
+				http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+				return
 			}
 		}
 	}
@@ -91,7 +107,7 @@ func (re Results) RunAll(w http.ResponseWriter, r *http.Request) {
 func (re Results) ChangeStatus(w http.ResponseWriter, r *http.Request) {
 	recordId, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		http.Error(w, "ID parameter must be numeric.", http.StatusInternalServerError)
 		return
 	}
 	newStatus, err := strconv.Atoi(chi.URLParam(r, "status"))
@@ -100,7 +116,7 @@ func (re Results) ChangeStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if newStatus < 0 || newStatus > 3 {
-		http.Error(w, "Invalid status code provided", http.StatusNotFound)
+		http.Error(w, "Invalid status code provided.", http.StatusNotFound)
 		return
 	}
 	if newStatus == 3 {
