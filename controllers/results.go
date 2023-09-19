@@ -99,18 +99,26 @@ func (re Results) ChangeStatus(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
-	if newStatus < 0 || newStatus > 2 {
+	if newStatus < 0 || newStatus > 3 {
 		http.Error(w, "Invalid status code provided", http.StatusNotFound)
 		return
 	}
-	res, err := re.ResultsService.ChangeStatus(recordId, newStatus)
-	if err != nil {
-		println(err)
-		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
-	}
-	if res < 1 {
-		http.Error(w, "Invalid recordId.", http.StatusNotFound)
-		return
+	if newStatus == 3 {
+		err := re.ResultsService.DeleteRecord(recordId)
+		if err != nil {
+			println(err)
+			http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		}
+	} else {
+		res, err := re.ResultsService.ChangeStatus(recordId, newStatus)
+		if err != nil {
+			println(err)
+			http.Error(w, "Something went wrong.", http.StatusInternalServerError)
+		}
+		if res < 1 {
+			http.Error(w, "Invalid recordId.", http.StatusNotFound)
+			return
+		}
 	}
 	_, err = w.Write([]byte(chi.URLParam(r, "status")))
 	if err != nil {

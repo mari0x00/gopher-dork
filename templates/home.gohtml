@@ -50,7 +50,7 @@
                                         <div class="dropdown-menu hidden rounded-md absolute z-50 mt-2 py-2 w-32 bg-gray-400 border border-gray-600 shadow-lg">
                                             <div style="cursor: pointer" _id="{{$element.Id}}" _newStatus="1" class="editBtn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">In progress</div>
                                             <div style="cursor: pointer" _id="{{$element.Id}}" _newStatus="2" class="editBtn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Completed</div>
-                                            <div style="cursor: pointer" _id="{{$element.Id}}" _newStatus="delete" class="editBtn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</div>
+                                            <div style="cursor: pointer" _id="{{$element.Id}}" _newStatus="3" class="editBtn block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</div>
                                         </div>
                                     </div>
                                 </td>
@@ -104,8 +104,13 @@
                 // Check if the request was a success
                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                     var newStatus = xhr.responseText;
-                    changeColor(parent, newStatus);
-                    parent.setAttribute("_status", newStatus);
+                    if (newStatus === "3") {
+                        parent.remove();
+                    } else {
+                        changeColor(parent, newStatus);
+                        parent.setAttribute("_status", newStatus);
+                    }
+                    
                 }
             }
         });

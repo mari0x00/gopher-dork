@@ -91,3 +91,12 @@ func (rs *ResultsService) ChangeStatus(recordId int, newStatus int) (int64, erro
 	}
 	return i, nil
 }
+
+func (rs *ResultsService) DeleteRecord(recordId int) error {
+	sqlStatement := "DELETE FROM results WHERE id = $1"
+	_, err := rs.DB.Exec(sqlStatement, recordId)
+	if err != nil {
+		return fmt.Errorf("deleteRecord: %v", err)
+	}
+	return nil
+}

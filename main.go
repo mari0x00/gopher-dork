@@ -56,7 +56,6 @@ func main() {
 	r.Get("/run/{id}", re.GetDorks)
 	r.Get("/run", re.RunAll)
 	r.Get("/edit/{id}/{status}", re.ChangeStatus)
-	r.Get("/edit/{id}/delete", re.RunAll)
 
 	fmt.Println("Server started!")
 	err = http.ListenAndServe(":3000", r)
