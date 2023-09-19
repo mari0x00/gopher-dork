@@ -63,7 +63,9 @@
         </div>
     </div>  
 </div>
+
 <script>
+
     const dropdownButtons = document.querySelectorAll('.dropdown-button');
     const editBtns = document.querySelectorAll('.editBtn');
     const rows = document.querySelectorAll('.tr');
@@ -97,21 +99,25 @@
             } else {
                 path = document.location.origin + "/edit/" + id + "/" + status;
             }
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", path);
-            xhr.send();
-            xhr.onload = function() {
-                // Check if the request was a success
-                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                    var newStatus = xhr.responseText;
-                    if (newStatus === "3") {
+            if (status === "3") {
+                const msgBtn = document.getElementById("msg-popup");
+                msgBtn.classList.remove("hidden");
+                waitForConfirmation().then((userChoice) => {
+                    msgBtn.classList.add("hidden");
+                    if (userChoice == "No") {
+                        return;
+                    } else if (userChoice == "Yes") {
                         parent.remove();
-                    } else {
-                        changeColor(parent, newStatus);
-                        parent.setAttribute("_status", newStatus);
                     }
-                    
-                }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            } else {
+                changeStatus(path, function(newStatus){
+                    changeColor(parent, newStatus);
+                    parent.setAttribute("_status", newStatus);
+                });
             }
         });
     });
@@ -135,6 +141,30 @@
         }
     };
 
+    function waitForConfirmation() {
+        return new Promise((resolve, reject) => {
+            const yesButton = document.querySelector('#yes-button');
+            const noButton = document.querySelector('#no-button');
+            yesButton.addEventListener('click', () => {
+                resolve('Yes');
+            });
+            noButton.addEventListener('click', () => {
+                resolve('No');
+            });
+        });
+    }
+
+    function changeStatus(path, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", path);
+        xhr.send();
+        xhr.onload = function() {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                const newStatus = xhr.responseText;
+                callback(newStatus);
+            }
+        }
+    }
 
 </script>
 {{end}}
