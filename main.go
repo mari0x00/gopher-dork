@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/mari0x00/google-dork/controllers"
 	"github.com/mari0x00/google-dork/migrations"
 	"github.com/mari0x00/google-dork/models"
@@ -17,6 +18,7 @@ var query = `ext:(doc | docx | pdf | xls | xlsx | txt | ps | rtf | odt | sxw | p
 
 func main() {
 	r := chi.NewRouter()
+	r.Use(middleware.StripSlashes)
 	cfg := models.DefaultPostgressConfig()
 	db, err := models.Open(cfg)
 	if err != nil {

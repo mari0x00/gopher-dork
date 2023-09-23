@@ -42,6 +42,7 @@ func (c Configs) Add(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Something went wrong.", http.StatusInternalServerError)
 		return
 	}
+	http.Redirect(w, r, "/config", http.StatusFound)
 	c.GetAll(w, r)
 }
 
