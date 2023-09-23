@@ -53,7 +53,7 @@ func main() {
 	r.Get("/config", co.GetAll)
 	r.Post("/config/add", co.Add)
 	r.Get("/config/delete/{id}", co.Delete)
-	r.Get("/run/{id}", re.GetDorks)
+	r.Get("/config/run/{id}", re.GetDorks)
 	r.Get("/run", re.RunAll)
 	r.Get("/edit/{id}/{status}", re.ChangeStatus)
 
