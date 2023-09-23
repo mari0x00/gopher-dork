@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joho/godotenv"
 	"github.com/mari0x00/google-dork/controllers"
 	"github.com/mari0x00/google-dork/migrations"
 	"github.com/mari0x00/google-dork/models"
@@ -13,11 +15,46 @@ import (
 	"github.com/mari0x00/google-dork/views"
 )
 
+type config struct {
+	PSQL   models.PostgresConfig
+	Server struct {
+		Address string
+	}
+}
+
+func loadEnvConfig() (config, error) {
+	var cfg config
+	err := godotenv.Load()
+	if err != nil {
+		return cfg, err
+	}
+
+	cfg.PSQL = models.PostgresConfig{
+		Host:     os.Getenv("PSQL_HOST"),
+		Port:     os.Getenv("PSQL_PORT"),
+		User:     os.Getenv("PSQL_USER"),
+		Password: os.Getenv("PSQL_PASSWORD"),
+		Database: os.Getenv("PSQL_DATABASE"),
+		SSLMode:  os.Getenv("PSQL_SSLMODE"),
+	}
+	if cfg.PSQL.Host == "" && cfg.PSQL.Port == "" {
+		return cfg, fmt.Errorf("No PSQL config provided.")
+	}
+
+	cfg.Server.Address = os.Getenv("SERVER_ADDRESS")
+	return cfg, nil
+}
+
 func main() {
+	cfg, err := loadEnvConfig()
+	if err != nil {
+		panic(err)
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.StripSlashes)
-	cfg := models.DefaultPostgressConfig()
-	db, err := models.Open(cfg)
+
+	db, err := models.Open(cfg.PSQL)
 	if err != nil {
 		panic(err)
 	}
@@ -56,8 +93,8 @@ func main() {
 	r.Get("/run", re.RunAll)
 	r.Get("/edit/{id}/{status}", re.ChangeStatus)
 
-	fmt.Println("Server started!")
-	err = http.ListenAndServe(":3000", r)
+	fmt.Printf("Starting the webserver on port %s...\n", cfg.Server.Address)
+	err = http.ListenAndServe(cfg.Server.Address, r)
 	if err != nil {
 		panic(err)
 	}

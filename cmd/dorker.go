@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/gocolly/colly"
+	"github.com/joho/godotenv"
 )
 
 type Result struct {
@@ -16,14 +19,26 @@ type Result struct {
 	Description string
 }
 
-const MAX_LIMIT = 1000
+func getMaxLimitFromEnv() int {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Error loading .env file")
+		return 100
+	}
+	limit, err := strconv.Atoi(os.Getenv("MAX_LIMIT"))
+	if err != nil {
+		log.Println("Error converting MAX_LIMIT string to int")
+		return 100
+	}
+	return limit
+}
 
 func Dork(query string, limit int) ([]Result, error) {
 	c := colly.NewCollector()
 	start := 0
 	var results []Result
 	if limit < 1 {
-		limit = MAX_LIMIT
+		limit = getMaxLimitFromEnv()
 	}
 
 	c.OnRequest(func(r *colly.Request) {

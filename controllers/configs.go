@@ -35,7 +35,6 @@ func (c Configs) Add(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Limit parameter must be numeric.", http.StatusInternalServerError)
 		return
 	}
-	// Add some sanitization for the name and query fields
 	err = c.ConfigsService.Add(name, query, limit)
 	if err != nil {
 		fmt.Println(err)
