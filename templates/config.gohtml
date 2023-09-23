@@ -52,10 +52,10 @@
                             <tbody class="bg-gray-500 divide-y divide-gray-400">
                                 {{range $index, $element := .}}
                                 <tr class="tr">
-                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">{{$index | add1}}</td>
-                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">{{$element.Name}}</td>
-                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">{{$element.Query}}</td>
-                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white">{{$element.Limit}}</td>
+                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white break-all">{{$index | add1}}</td>
+                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white break-all">{{$element.Name}}</td>
+                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white break-all">{{$element.Query}}</td>
+                                    <td class="px-6 py-4 whitespace-normal font-normal text-sm text-white break-all">{{$element.Limit}}</td>
                                     <td class="ps-6 pe-1 py-4 whitespace-normal font-semibold text-sm text-white">
                                         <div class="relative inline-block text-left">
                                             <button _id="{{$element.Id}}" class="delButton rounded-md px-4 py-2 bg-green-400 text-white font-semibold hover:bg-green-600 focus:outline-none">

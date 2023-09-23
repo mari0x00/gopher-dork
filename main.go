@@ -13,9 +13,6 @@ import (
 	"github.com/mari0x00/google-dork/views"
 )
 
-//TODO: DELETE FROM HERE
-var query = `ext:(doc | docx | pdf | xls | xlsx | txt | ps | rtf | odt | sxw | psw | ppt | pps | xml | ppt | pptx) (intext:"Internal - KMD A/S" | intext:"Confidential - KMD A/S" | intext:"Confidential - KMD employees only")`
-
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.StripSlashes)
