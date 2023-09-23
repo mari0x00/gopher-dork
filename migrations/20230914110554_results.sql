@@ -7,20 +7,6 @@ CREATE TABLE results(
     description TEXT,
     status INT NOT NULL
 );
-INSERT INTO results(
-    config_id, 
-    url, 
-    description,
-    status) 
-VALUES 
-    (1,
-    'test',  
-    'test',
-    0), 
-    (1,
-    'test2',  
-    'test',
-    0);
 -- +goose StatementEnd
 
 -- +goose Down
