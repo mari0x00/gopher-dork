@@ -65,7 +65,6 @@
 </div>
 
 <script>
-
     const dropdownButtons = document.querySelectorAll('.dropdown-button');
     const editBtns = document.querySelectorAll('.editBtn');
     const rows = document.querySelectorAll('.tr');
@@ -107,7 +106,9 @@
                     if (userChoice == "No") {
                         return;
                     } else if (userChoice == "Yes") {
-                        parent.remove();
+                        changeStatus(path, function(newStatus){
+                            if (newStatus === "3") { parent.remove() };
+                        });
                     }
                 })
                 .catch((error) => {
