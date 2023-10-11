@@ -20,3 +20,5 @@ The idea is to create one or more dork queries to observe and then periodically 
 3. To run a single query use the `Run` button next to it, alternativelly you can run all queries using the `Run` button in the navbar,
 4. Once the app is done running all the queries, you will be redirected to the `Results` page, where you can view the enties and triage them.
 
+# 📸 Image of the UI
+![image](https://github.com/mari0x00/gopher-dork/assets/25896006/f03aecd8-73f8-4f34-8b5a-d583c0abd7b3)
